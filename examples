@@ -1,0 +1,59 @@
+initGamma(G), hasType(G,sum(var(x),vars(y)),T).
+initGamma(G), hasType(G,subt(var(x),vars(y)),T).
+initGamma(G), hasType(G,mult(var(x),vars(y)),T).
+initGamma(G), hasType(G,or(var(x),vars(y)),T).
+
+hasType([(var(x),int),(var(y),int)],tuple([var(x),var(y)]),T).
+
+
+hasType([(var(x),int),(var(y),int)],let(seq(def(var(z1),xor(true,false)),def(var(z2),or(true,false))),or(or(var(z1),var(z2)),false)),T).
+hasType([(var(x),int),(var(y),int)],let(seq(def(var(z1),xor(true,false)),def(var(z2),or(var(z1),false))),or(or(var(z1),var(z2)),false)),T).
+hasType([(var(x),int),(var(y),int)],let(parallel(def(var(z1),xor(true,false)),def(var(z2),or(true,false))),or(or(var(z1),var(z2)),false)),T).
+hasType([(var(x),int),(var(y),int)],let(parallel(def(var(z1),compare(3,2)),def(var(z2),or(true,false))),or(or(var(z1),var(z2)),false)),T).
+hasType([(var(x),int),(var(y),int)],let(local(def(var(z1),compare(3,2)),def(var(z2),or(var(z1),false))),or(or(var(z1),var(z2)),false)),T).
+hasType([(var(x),int),(var(y),int)],let(local(def(var(z1),compare(3,2)),def(var(z2),or(var(z1),false))),if(var(z2),3,5)),T).
+hasType([(var(x),int),(var(y),int)],let(seq(def(var(z1),compare(3,2)),def(var(z2),or(var(z1),false))),if(var(z2),3,5)),T).
+
+hasType([(var(x),int),(var(y),int)],let(parallel(def(var(x),var(y)), def(var(y),var(x))), sum(var(x),var(y))),T).
+
+hasType([], funcall(lambda(var(z1),funcall(lambda(var(z2), sum(proj1(z1),var(z2))),6) ),tuple([1,2])), T).
+
+hasType([], funcall(lambda(var(z1),funcall(lambda(var(z2), sum(var(z1),var(z2))),6) ),5), T).
+
+hasType([], funcall(lambda(var(z1),funcall(lambda(var(z2), funcall(lambda(var(z3), sum(var(z1),sum(var(z2),var(z3)))),7)),6) ),5), T).
+T = int;
+
+hasType([], funcall(lambda(var(z),let(def(var(x),var(z)),sum(var(x),var(x)))),funcall(lambda(var(z1),funcall(lambda(var(z2), funcall(lambda(var(z3), sum(var(z1),sum(var(z2),var(z3)))),7)),6) ),5)), T).
+T = int;
+
+initGamma(G), hasType(G,funcall(lambda(var(x),sum(var(x),3)), 3),T).
+initGamma(G), hasType(G,funcall(lambda(var(x),mult(var(x),3)), 3),T).
+initGamma(G), hasType(G,funcall(lambda(var(x),subt(var(x),3)), 3),T).
+
+hasType([],proj1(tuple([4,true])),T).
+
+hasType([],proj2(tuple([4,true])),T).
+
+hasType([],
+
+Counter examples for polymorphic type inference
+hasType([],tuple(A),T).
+A = T, T = [] ;
+A = [true],
+T = [bool] ;
+A = [true, true],
+T = [bool, bool] ;
+A = [true, true, true],
+T = [bool, bool, bool] ;
+.
+.
+.
+
+?- hasType([], eq(A,B),T).
+A = B, B = true,
+T = bool ;
+A = true,
+B = false,
+T = bool ;
+....
+

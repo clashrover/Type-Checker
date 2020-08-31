@@ -1,0 +1,28 @@
+Assignment 7
+Sagar Sharma
+2018CS10378
+
+Examples in examples.txt
+
+rules:
+
+typeElaborates(G,let D in E, T') -> gets the list containing variables and their binded types, definitions bind variables
+
+has Type(G,e,T)   -> gets type of expression e using type assumption G
+
+cascade(G1,G2,G3)  -> G3 becomes G2 @ G1 
+
+lookup -> search a variable in type assumption table.
+
+rest is trivial
+
+-------------------------------------------------------------------------------------------------------------------------
+Explaining function call 
+
+hasType(G,lambda(X, E), arrow(Tm,T)) :- hasType(G,X,Tm), hasType(G,E,T). 
+
+hasType(G,funcall(lambda(X,E), E2),T) :- hasType(G,E2,Tm),  cascade(G,[(X,Tm)],G1),  hasType(G1,lambda(X,E), arrow(Tm,T)).
+
+we know func application E1 E2 means E2 is argument and E1 can be taken a lambda abstraction.
+hence for abstract we the rule 
+we bind x to the type of E2 and then use cascaded type assumption table to find type of E1
